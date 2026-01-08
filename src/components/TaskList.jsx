@@ -1,5 +1,6 @@
 import TaskItem from './TaskItem';
 import { useTaskStore } from '../store/useTaskStore';
+import { brand } from '../brand';
 
 const TaskList = () => {
   const { tasks, updateTask, deleteTask } = useTaskStore((state) => ({
@@ -13,7 +14,6 @@ const TaskList = () => {
   }
 
   return (
-    // Passamos callbacks como props para cada item
     <ul style={styles.list}>
       {tasks.map((task) => (
         <TaskItem
@@ -31,14 +31,18 @@ const styles = {
   list: {
     listStyle: 'none',
     padding: 0,
-    margin: '12px 0 0',
+    margin: '10px 0 0',
     display: 'flex',
     flexDirection: 'column',
-    gap: 10,
+    gap: 12,
   },
   empty: {
-    marginTop: 12,
-    color: '#475569',
+    marginTop: 14,
+    color: brand.colors.inkSubtle,
+    background: brand.colors.surfaceMuted,
+    padding: '12px 14px',
+    borderRadius: brand.radius.md,
+    border: `1px dashed ${brand.colors.border}`,
   },
 };
 

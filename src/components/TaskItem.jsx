@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useToast } from './ToastProvider';
+import { brand } from '../brand';
 
 const TaskItem = ({ task, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(task.title);
+  const { showToast } = useToast();
 
   const handleSave = () => {
     // Atualiza na store e fecha modo edição
@@ -15,10 +18,28 @@ const TaskItem = ({ task, onEdit, onDelete }) => {
     setIsEditing(false);
   };
 
+  const handleDelete = () => {
+    showToast({
+      message: 'Excluir esta tarefa?',
+      type: 'info',
+      actions: [
+        {
+          label: 'Excluir',
+          variant: 'danger',
+          onClick: () => onDelete(task.id),
+        },
+        {
+          label: 'Cancelar',
+          variant: 'secondary',
+        },
+      ],
+    });
+  };
+
   return (
     <li style={styles.item}>
       <div style={styles.content}>
-        <span style={styles.bullet}>•</span>
+        <span style={styles.bullet}>↗</span>
         {isEditing ? (
           <input
             value={draft}
@@ -50,8 +71,8 @@ const TaskItem = ({ task, onEdit, onDelete }) => {
               ✏️
             </button>
             <button
-              style={{ ...styles.iconButton, color: '#dc2626' }}
-              onClick={() => onDelete(task.id)}
+              style={{ ...styles.iconButton, color: brand.colors.danger }}
+              onClick={handleDelete}
               title="Excluir"
             >
               🗑️
@@ -69,10 +90,11 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 10,
-    padding: '10px 12px',
-    borderRadius: 10,
-    background: '#fff',
-    border: '1px solid #e2e8f0',
+    padding: '14px 16px',
+    borderRadius: brand.radius.md,
+    background: brand.colors.surface,
+    border: `1px solid ${brand.colors.border}`,
+    boxShadow: brand.shadow.soft,
   },
   content: {
     display: 'flex',
@@ -81,8 +103,16 @@ const styles = {
     flex: 1,
   },
   bullet: {
-    color: '#2563eb',
-    fontWeight: 'bold',
+    width: 22,
+    height: 22,
+    borderRadius: brand.radius.pill,
+    background: brand.colors.primarySoft,
+    color: brand.colors.primaryContrast,
+    display: 'grid',
+    placeItems: 'center',
+    border: `1px solid ${brand.colors.border}`,
+    fontWeight: 700,
+    fontSize: 11,
   },
   actions: {
     display: 'flex',
@@ -90,36 +120,43 @@ const styles = {
     gap: 8,
   },
   iconButton: {
-    border: '1px solid #cbd5e1',
-    background: '#f8fafc',
-    borderRadius: 8,
-    padding: '6px 8px',
+    border: `1px solid ${brand.colors.border}`,
+    background: brand.colors.surfaceMuted,
+    borderRadius: brand.radius.sm,
+    padding: '8px 10px',
     cursor: 'pointer',
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: 700,
+    color: brand.colors.ink,
+    boxShadow: brand.shadow.inset,
   },
   save: {
     border: 'none',
-    background: '#16a34a',
-    color: '#fff',
-    padding: '6px 10px',
-    borderRadius: 8,
+    background: brand.colors.primary,
+    color: brand.colors.primaryContrast,
+    padding: '8px 12px',
+    borderRadius: brand.radius.sm,
+    cursor: 'pointer',
+    fontWeight: 600,
+    boxShadow: '0 6px 18px rgba(255, 196, 0, 0.35)',
+  },
+  cancel: {
+    border: `1px solid ${brand.colors.border}`,
+    background: brand.colors.surface,
+    color: brand.colors.ink,
+    padding: '8px 12px',
+    borderRadius: brand.radius.sm,
     cursor: 'pointer',
     fontWeight: 600,
   },
-  cancel: {
-    border: '1px solid #cbd5e1',
-    background: '#fff',
-    color: '#0f172a',
-    padding: '6px 10px',
-    borderRadius: 8,
-    cursor: 'pointer',
-  },
   input: {
     flex: 1,
-    padding: '8px 10px',
-    borderRadius: 8,
-    border: '1px solid #cbd5e1',
+    padding: '10px 12px',
+    borderRadius: brand.radius.md,
+    border: `1px solid ${brand.colors.border}`,
     fontSize: 15,
+    background: brand.colors.surfaceMuted,
+    color: brand.colors.ink,
   },
 };
 
